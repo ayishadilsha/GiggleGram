@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GiggleGram - Opposite Quotes</title>
+     <button class="back-btn" onclick="window.location.href='index.html'">back</button>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+           background-image: url('assets/back1.png'); 
+background-size: cover; 
+background-position: center; 
+background-repeat: no-repeat; 
+margin:0;
+      animation: bgMove 10s ease infinite;
+      text-align: center;
+      overflow: hidden;
+      color: rgb(255, 255, 255);
+    }
+    @keyframes bgMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      margin-top: 40px;
+      animation: pop 1.5s ease-in-out infinite alternate;
+    }
+     .back-btn {
+  position: fixed;
+  top: 18px;       /* Distance from top */
+  left: 15px;      /* Distance from left */
+  width: 100px;     /* Circle width */
+  height: 55px;    /* Circle height */
+  background: #ff758c;
+  color: white;
+  border: none;
+  border-radius: 50%;   /* Makes it circular */
+  font-size: 20px;      /* Arrow size */
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgb(255, 255, 255);
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.back-btn:hover {
+  background: #ff5277;
+  transform: scale(1.1); /* Slightly grow on hover */
+}
+    @keyframes pop {
+      from {transform: scale(1);}
+      to {transform: scale(1.05);}
+    }
+
+    .quote-card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 40px auto;
+      max-width: 500px;
+      font-size: 1.3rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      backdrop-filter: blur(5px);
+      animation: fadeIn 1.5s ease forwards;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+
+
+    /* Floating Emojis */
+    .emoji {
+      position: fixed;
+      font-size: 2rem;
+      animation: float 8s linear infinite;
+      opacity: 0.7;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0;}
+      50% { opacity: 1;}
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0;}
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgMusic" src="assets/Beloved.mp3" autoplay loop hidden></audio>
+
+  <!-- Floating Emojis -->
+  <div class="emoji" style="left:10%;">😂</div>
+  <div class="emoji" style="left:30%;">😈</div>
+  <div class="emoji" style="left:50%;">🤪</div>
+  <div class="emoji" style="left:70%;">🙃</div>
+  <div class="emoji" style="left:85%;">🤣</div>
+
+  <h2 id="title">🎭 Opposite Quote Mode 🎭</h2>
+
+  <div class="quote-card">
+    <p id="message"></p>
+    <p id="quote"></p>
+  </div>
+
+ 
+
+  <script>
+    // Random opposite/funny quotes
+    const oppositeQuotes = [
+      "Oops! Another year closer to paying more taxes 🎂💸",
+      "Love is blind... and now partially deaf 👂❤️",
+      "New Year, same old problems! 🎉😂",
+      "Stop smiling, life will find you soon 😈",
+      "Give up, Netflix is waiting 📺",
+      "Congrats, you're already good at doing nothing 😎",
+      "Even your shadow left you in the dark 🌑",
+      "Happiness is temporary... like your phone battery 🔋",
+      "Sunshine? Meh, I prefer rain 🌧️",
+      "Resolutions? You’ll forget them in a week. 💤"
+    ];
+
+    const randomMessage = [
+      "You wanted something nice, but GiggleGram is in evil mode 😈",
+      "Normal wishes are boring, here’s your opposite one 😂",
+      "Tadaa! Presenting the dark side of your wish 🌚",
+      "Oops! This is the sarcastic version you never asked for 🤪"
+    ];
+
+    // Display random quotes every time
+    document.getElementById('message').innerText =
+      randomMessage[Math.floor(Math.random() * randomMessage.length)];
+    document.getElementById('quote').innerText =
+      oppositeQuotes[Math.floor(Math.random() * oppositeQuotes.length)];
+
+    // Animate emojis randomly
+    const emojis = document.querySelectorAll('.emoji');
+    emojis.forEach(emoji => {
+      emoji.style.animationDelay = `${Math.random() * 5}s`;
+      emoji.style.fontSize = `${Math.random() * 1 + 2}rem`;
+    });
+  </script>
+</body>
+</html>

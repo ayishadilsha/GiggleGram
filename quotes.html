@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose a Quote</title>
+     <button class="back-btn" onclick="window.location.href='index.html'">back</button>
+  <link rel="stylesheet" href="style.css">
+  <style>
+       .back-btn {
+  position: fixed;
+  top: 18px;       /* Distance from top */
+  left: 15px;      /* Distance from left */
+  width: 100px;     /* Circle width */
+  height: 55px;    /* Circle height */
+  background: #ff758c;
+  color: white;
+  border: none;
+  border-radius: 50%;   /* Makes it circular */
+  font-size: 20px;      /* Arrow size */
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.back-btn:hover {
+  background: #ff5277;
+  transform: scale(1.1); /* Slightly grow on hover */
+}
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" src="assets/Beloved.mp3" autoplay loop hidden></audio>
+  <div class="container">
+    <h2>💬 Choose a Quote Type 💬</h2>
+    <ul class="list">
+      <li><a href="detail.html?type=quote&name=happy">😊 Happy</a></li>
+      <li><a href="detail.html?type=quote&name=motivating">🚀 Motivating</a></li>
+      <li><a href="detail.html?type=quote&name=love">❤️ Love</a></li>
+      <li><a href="detail.html?type=quote&name=funny">😂 Funny</a></li>
+    </ul>
+    
+  </div>
+</body>
+</html>

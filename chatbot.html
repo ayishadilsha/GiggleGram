@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GiggleBot 🤖</title>
+  <button class="back-btn" onclick="window.location.href='index.html'">back</button>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      
+    }
+    
+    /* Custom text shadow */
+    .text-shadow-lg {
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-[#f6d365] to-[#fda085] text-gray-800">
+
+  <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white text-shadow-lg">🤖 GiggleBot</h1>
+  
+  <div id="chat" class="w-full max-w-2xl h-96 p-4 bg-white rounded-2xl shadow-xl overflow-y-auto mb-6 flex flex-col space-y-4">
+    <!-- Chat messages will be added here -->
+  </div>
+
+  <div class="flex w-full max-w-2xl">
+    <input type="text" id="userInput" placeholder="Type something funny..." class="flex-grow p-3 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff758c] text-gray-700">
+    <button id="sendBtn" onclick="sendMessage()" class="bg-[#ff758c] hover:bg-[#ff5277] text-white font-bold py-3 px-6 rounded-r-full shadow-lg transition-colors duration-200">Send</button>
+  </div>
+  
+  <!-- Back button -->
+  <a href="index.html" class="mt-4 text-[#ff758c] hover:text-[#ff5277] font-bold text-sm transition-colors duration-200">
+    ⬅ Back to Home
+  </a>
+  
+  <!-- Message Box for alerts -->
+  <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-2xl text-center">
+      <p id="messageText" class="mb-4"></p>
+      <button onclick="hideMessageBox()" class="bg-[#ff758c] hover:bg-[#ff5277] text-white font-bold py-2 px-4 rounded-full">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+
+    // Your Gemini API key (leave empty to use funny offline mode)
+    const apiKey = ""; 
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+    // Fallback funny replies
+    const funnyReplies = [
+      "🤣 Haha, that's hilarious!",
+      "🤖 I am a useless bot but I like your energy!",
+      "😜 Did you know potatoes can dance?",
+      "🦄 I just saw a unicorn in your Wi-Fi!",
+      "💤 Sorry, I fell asleep... what?",
+      "🎉 Congratulations, you just wasted 5 seconds here!"
+    ];
+
+    function showMessageBox(message) {
+      document.getElementById('messageText').textContent = message;
+      document.getElementById('messageBox').classList.remove('hidden');
+    }
+
+    function hideMessageBox() {
+      document.getElementById('messageBox').classList.add('hidden');
+    }
+
+    function addMessage(sender, text) {
+      const msg = document.createElement('div');
+      msg.classList.add('p-3', 'rounded-lg', 'shadow-md', 'break-words');
+
+      if (sender === 'You') {
+        msg.classList.add('bg-blue-100', 'self-end', 'rounded-br-none', 'max-w-[80%]');
+      } else {
+        msg.classList.add('bg-gray-100', 'self-start', 'rounded-bl-none', 'max-w-[80%]');
+      }
+
+      msg.innerHTML = `<b>${sender}:</b> ${text}`;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const userText = userInput.value.trim();
+      if (!userText) {
+        showMessageBox("Please type a message before sending.");
+        return;
+      }
+
+      // User message
+      addMessage('You', userText);
+      userInput.value = '';
+
+      // Bot thinking placeholder
+      addMessage('GiggleBot', 'Thinking...');
+      const thinkingElement = chat.lastChild;
+
+      // Offline funny mode if no API key
+      if (!apiKey) {
+        setTimeout(() => {
+          const botReply = funnyReplies[Math.floor(Math.random() * funnyReplies.length)];
+          thinkingElement.innerHTML = `<b>GiggleBot:</b> ${botReply}`;
+        }, 800);
+        return;
+      }
+
+      // Online AI mode with Gemini
+      try {
+        const payload = {
+          contents: [{ role: "user", parts: [{ text: userText }] }]
+        };
+
+        // Retry with backoff
+        async function fetchWithBackoff(retries = 3, delay = 1000) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error("API Error: " + response.status);
+            return response.json();
+          } catch (error) {
+            if (retries > 0) {
+              await new Promise(res => setTimeout(res, delay));
+              return fetchWithBackoff(retries - 1, delay * 2);
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        const result = await fetchWithBackoff();
+
+        if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
+          const botReply = result.candidates[0].content.parts[0].text;
+          thinkingElement.innerHTML = `<b>GiggleBot:</b> ${botReply}`;
+        } else {
+          thinkingElement.innerHTML = '<b>GiggleBot:</b> Oops, AI gave a confusing reply.';
+        }
+
+      } catch (error) {
+        console.error('API Error:', error);
+        thinkingElement.innerHTML = '<b>GiggleBot:</b> I am having some trouble connecting. Using funny mode instead!';
+        setTimeout(() => {
+          const botReply = funnyReplies[Math.floor(Math.random() * funnyReplies.length)];
+          thinkingElement.innerHTML = `<b>GiggleBot:</b> ${botReply}`;
+        }, 800);
+      }
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    userInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') sendMessage();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      addMessage('GiggleBot', 'Hello! What can I do for you today? 😜');
+    });
+  </script>
+</body>
+</html>
