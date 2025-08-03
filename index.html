@@ -3,21 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GiggleGram - Home</title>
+  <title>GiggleGram</title>
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <audio id="bgMusic" src="assets/Beloved.mp3" autoplay loop hidden></audio>
-  <div class="container">
-    <h1>🎉 Welcome to GiggleGram 🎉</h1>
-    <p>Pick your vibe today!</p>
-    <button onclick="window.location.href='wishes.html'">🎂 Wishes</button>
-    <button onclick="window.location.href='quotes.html'">💬 Quotes</button>
-    <button onclick="window.location.href='chatbot.html'">🤖 Chat with Bot</button>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      overflow: hidden;
+      cursor: pointer;
+      flex-direction: column;
 
-  </div>
-  <button onclick="alert('Haha! This back button is useless 😜')">
-  ⬅ Back to GiggleGram
-</button>
+      background-image: url('assets/back.png'); 
+background-size: cover; 
+background-position: center; 
+background-repeat: no-repeat; 
+margin:0
+    }
+    h1 {
+      font-size: 60px;
+      color: white;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-shadow: 2px 2px 15px rgba(0,0,0,0.3);
+      animation: fadeIn 2s ease-in-out;
+          position: absolute;
+    top: 100px;   /* Distance from top */
+    left: 100px;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.5);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    p {
+      color: white;
+      font-family: Arial, sans-serif;
+      animation: blink 1.2s infinite alternate;
+      margin-top: 20px;
+                position: absolute;
+    top: 230px;   /* Distance from top */
+    left: 280px;
+    }
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body  onclick="goHome()">
+      <audio id="bgMusic" src="assets/Beloved.mp3" autoplay loop hidden></audio>
+  <h1>🎉 GiggleGram 🎉</h1>
+  <p>Click anywhere to start</p>
+
+
+  <script>
+    function goHome() {
+      window.location.href = "index.html";  // Redirect to Home page
+    }
+  </script>
 </body>
 </html>
